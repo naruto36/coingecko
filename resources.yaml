@@ -1,0 +1,42 @@
+Resources:
+  EmailCryptoPriceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/services/emailCryptoCurrentPriceServices.handler
+      Runtime: nodejs14.x
+      Environment:
+        Variables:
+          TABLE_NAME: cryptoSearchHistory
+      Events:
+        PriceRequest:
+          Type: Api
+          Properties:
+            Path: /crypto-price
+            Method: post
+
+  SearchHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/services/searchHistoryServices.handler
+      Runtime: nodejs14.x
+      Environment:
+        Variables:
+          TABLE_NAME: cryptoSearchHistory
+      Events:
+        HistoryRequest:
+          Type: Api
+          Properties:
+            Path: /search-history
+            Method: get
+
+  CryptoSearchHistoryTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cryptoSearchHistory
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
